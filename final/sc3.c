@@ -1,8 +1,4 @@
 //--------------------------------------------
-// NAME: Ivo Stratev
-// CLASS: XIb
-// NUMBER: 16
-// PROBLEM: #3
 // FILE NAME: sc3.c
 // FILE PURPOSE:
 // Simulates simple game from Starcraft series. 
