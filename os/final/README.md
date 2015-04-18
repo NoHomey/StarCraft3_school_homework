@@ -20,7 +20,8 @@ Run ***./starcraft3***.
 
 Type ***m*** to create new *soldier* (You need 50 mineerals to do that).   
 Type ***s*** to create new *worker* (You need 50 mineerals to do that).   
-Type ***c*** to create new *command center* (You need 400 mineerals to do that).   
+Type ***c*** to create new *command center* (You need 400 mineerals to do that).     
+Once you have created 20 *soldiers* press *Enter* to continiue.  
 
 #Purpose: 
   
