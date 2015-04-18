@@ -261,32 +261,32 @@ int main () {
 				if ((all_minerals >= 50) && (m < 20)) {	//Check if there are enough minerals and if m is valid and if so decrement all_minerals with 50.
 					all_minerals -= 50;	//Decrement all_minerals with 50.
 					if (pthread_create(&soldiers[m], NULL, soldier, NULL) != 0) {	//Check if pthread_create fail and if so print error massage and force game_over().
-						printf("Failed to crate new sodler!\n");
+						printf("Failed to create new sodler!\n");
 						game_over();
 						break;
 					}
-				} else printf("No minerals to do that now!\n");	//Else indicate that that there are not enough minerals rigth now.
+				} else printf("Not enough minerals.\n");	//Else indicate that that there are not enough minerals rigth now.
 			}
 			if (command == 's') {	//Check if written command is s and if so check is it possible to create new worker.
 				if ((all_minerals >= 50) && (n < 100)) {	//Check if there are enough minerals and if n is valid and if so decrement all_minerals with 50.
 					all_minerals -= 50;	//Decrement all_minerals with 50.
 					if (pthread_create(&workers[n], NULL, worker, NULL) != 0) {	//Check if pthread_create fail and if so print error massage and force game_over().
-						printf("Failed to crate new worker!\n");
+						printf("Failed to create new worker!\n");
 						game_over();
 						break;
 					}
 				
-				} else printf("No minerals to do that now!\n");	//Else indicate that that there are not enough minerals rigth now.
+				} else printf("Not enough minerals.\n");	//Else indicate that that there are not enough minerals rigth now.
 			}
 			if (command == 'c') {	///Check if written command is c  and if so check is it possible to create new command center.
 				if ((all_minerals >= 400) && (k < 12)) {	//Check if there are enough minerals and if c is valid and if so decrement all_minerals with 400.
 					all_minerals -= 400;	//Decrement all_minerals with 400.
 					if (pthread_create(&centers[k], NULL, command_center, NULL) != 0) {	//Check if pthread_create fail and if so print error massage and force game_over().
-						printf("Failed to crate new command_center!\n");
+						printf("Failed to create new command_center!\n");
 						game_over();
 						break;
 					}
-				} else printf("No minerals to do that now!\n");	//Else indicate that that there are not enough minerals rigth now.
+				} else printf("Not enough minerals.\n");	//Else indicate that that there are not enough minerals rigth now.
 			}
 			if (pthread_mutex_unlock(&mutex_all_minerals) != 0 ) {	//Check if pthread_mutex_unlock fail and if so print error massage and force game_over().
 				printf("Fail to unlock mutex: minerals!\n");
