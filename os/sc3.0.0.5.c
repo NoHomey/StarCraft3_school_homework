@@ -203,10 +203,10 @@ void* solder () {
 // None.
 //----------------------------------------------
 int main () {
-	char command;
-	int i;
+	char command;	//Define command (the symbol writen form stdin).
+	int i;	//Define i (counter).
 	
-	pthread_t workers[100],  solders[20], centers[12];
+	pthread_t workers[100],  solders[20], centers[12];	//Define the threads id arrays: workers[100], solders[20] & centers[12].
 	
 	if (pthread_mutex_init(&mutex_workers, NULL) != 0) {
 		printf("Failed to initialize mutex: mutex_workers!\n");
