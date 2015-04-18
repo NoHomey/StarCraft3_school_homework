@@ -1,13 +1,13 @@
 #Game rules:
 
-Game starts with 1 command center, 5000 minerals on the map and 5 workers.   
-Each worker mines 8 minerals.  
-Each worker can delivere those 8 minerals at one command center at a time.  
-Command centers works as places where you can store minerals.   
-You can create new command center by pressing *c* but that will cost you 400 minerals.   
-You can create new worker by pressing *s* but that will cost you 50 minerals.    
-You can create new soldier by pressing *m* but that will cost you 50 minerals.    
-You win the game when you create 20 soldiers.   
+Game starts with 1 *command center*, 5000 *mineral*s on the map and 5 *workers*.   
+Each *worker* mines 8 *minerals*.  
+Each *worker* can delivere those 8 *minerals* at one *command center* at a time.  
+*Command center*s works as places where you can store *minerals*.   
+You can create new *command center* by pressing *c* but that will cost you 400 *minerals*.   
+You can create new *worker* by pressing *s* but that will cost you 50 *minerals*.    
+You can create new *soldier* by pressing *m* but that will cost you 50 minerals.    
+You win the game when you create 20 *soldiers*.   
 
 #Run under linux:
 
