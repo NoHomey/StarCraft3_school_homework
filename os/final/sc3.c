@@ -8,7 +8,7 @@
 // Simulates simple game from Starcraft series. 
 // The real purpose is to master multy thread programing by writing a really simple game.
 //---------------------------------------------
-// THe whole development proces can be found at: https://github.com/NoHomey/StarCraft3_school_homework.
+// THe whole development procces can be found at: https://github.com/NoHomey/StarCraft3_school_homework.
 // Finalizated program can be found at https://github.com/NoHomey/StarCraft3_school_homework/final or https://github.com/NoHomey/StarCraft3_school_homework/os/final.
 // If you do visit one of github links please read the README.md file on that page first!
 #include <unistd.h>	//In order to use sleep().
