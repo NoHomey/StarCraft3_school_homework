@@ -8,4 +8,4 @@ Files located outside ***final/*** & ***os/final/*** are development files they 
 
 > if (main_status == 16) {	//If main_status is 16 this means that is currently locked by other thread.   
 > +					i = 0;	//Reset i;    
-> 					while(i < k) {	//Loop througth other commnad centers.		 					while(i < k) {	//Loop througth other commnad centers.       
+> 					while(i < k) {	//Loop througth other commnad centers.  
