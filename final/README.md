@@ -27,4 +27,9 @@ Once you have created 20 *soldiers* press *Enter* to continiue.
   
 Create 20 *soldiers* as fast as you can.
 
+#Important in final folders the files ***sc3.c*** were changed:
+
+> if (main_status == 16) {	//If main_status is 16 this means that is currently locked by other thread.   
+> +					i = 0;	//Reset i;    
+> 					while(i < k) {	//Loop througth other commnad centers.  
 
