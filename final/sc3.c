@@ -1,10 +1,10 @@
-//--------------------------------------------
+//-------------------------------------
 // FILE NAME: sc3.c
 // FILE PURPOSE:
 // Simulates simple game from Starcraft series. 
 // The real purpose is to master multy thread programing by writing a really simple game.
 //---------------------------------------------
-// THe whole development proces can be found at: https://github.com/NoHomey/StarCraft3_school_homework.
+// THe whole development procces can be found at: https://github.com/NoHomey/StarCraft3_school_homework.
 // Finalizated program can be found at https://github.com/NoHomey/StarCraft3_school_homework/final or https://github.com/NoHomey/StarCraft3_school_homework/os/final.
 // If you do visit one of github links please read the README.md file on that page first!
 #include <unistd.h>	//In order to use sleep().
@@ -77,7 +77,6 @@ void* worker () {
 			game_over();
 			return NULL;
 		}
-		//if (map_minerals > 0) worker_minerals += 8;	//Worker successfuly mined 8 minerals.
 		while (worker_minerals > 0) {	//Loop while worker has minerals carried by him.
 			main_status = pthread_mutex_trylock(&mutex_minerals);	//Trylock mutex_minerals and assign the result to main_status.
 			if (main_status == 0) {	//If mutex_minerals has been successfuly locked than deliver minerals to minerals.
@@ -93,6 +92,7 @@ void* worker () {
 				printf("SVC %d delivered minerals to Command Center 1\n", number);		//Indicate the successful deliverment to Command Center 1.
 			} else {	//Else check if the mutex is locked by other thread and check other commnad centers if there are so.
 				if (main_status == 16) {	//If main_status is 16 this means that is currently locked by other thread.
+					i = 0;	//Reset i;
 					while(i < k) {	//Loop througth other commnad centers.
 						others_status = pthread_mutex_trylock(&mutex_command_centers_minerals[i]);	//Trylock mutex_command_centers_minerals[i] and assign the result to others_status.
 						if (others_status == 0) {	//If others_status is 0 that means that it can be locked.
