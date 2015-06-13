@@ -9,6 +9,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include <time.h>
+#include <errno.h>
 
 size_t a_flag;
 size_t R_flag;
@@ -45,14 +46,21 @@ int main(int argc, char** argv) {
 void ls_dir(char* path) { 
 	DIR* dir = opendir(path);
 	if(!dir)
-		return;
+		perror(path);
+	errno = 0;
 	struct dirent* ent = readdir(dir);
+	if(errno)
+		perror("Fail to readdir()");
 	size_t flag, i;
 	struct stat f_stat;
 	char* base = (char*) malloc(1 * sizeof(char));
+	if(!base)
+		perror("Fail to allocate memory");
 	char* dash = "/";
 	size_t dir_curr_size = 1;
 	char** dirs = (char**) malloc(dir_curr_size * sizeof(char*));
+	if(!dirs)
+		perror("Fail to allocate memory");
 	size_t dir_count = 0;
 	if(dir_flag)
 		printf("%s:\n", path);
@@ -60,21 +68,32 @@ void ls_dir(char* path) {
 		flag = ent->d_name[0] == '.' ? 1 : 0;
 		if(!flag || (flag && a_flag)) {
 			base = (char*) realloc(base, sizeof(path) + sizeof(ent->d_name) + 1);
+			if(!base)
+					perror("Fail to allocate memory");
 			base = strcpy(base, path);
 			base = strcat(base, dash);
 			base = strcat(base, ent->d_name);
-			stat(base, &f_stat);
+			if(!!lstat(base, &f_stat))
+				perror("Fail to stat()");
 			print_type(&f_stat.st_mode);
 			l_flag ? print_stats(&f_stat, ent->d_name) : printf(" %s\n", ent->d_name);
-			if(protect(ent->d_name) && (R_flag && (S_ISDIR(f_stat.st_mode)))) {
-				if(dir_count == dir_curr_size) 
+			if(protect(ent->d_name) && (R_flag && S_ISDIR(f_stat.st_mode))) {
+				if(dir_count == dir_curr_size) {
 					dirs = (char**) realloc(dirs, ++dir_curr_size * sizeof(char*));
+					if(!dirs)
+						perror("Fail to reallocate memory");
+				}
 				dirs[dir_count] = (char *) malloc(strlen(base) + 1 * sizeof(char));
+				if(!dirs[dir_count])
+					perror("Fail to allocate memory");
 				strcpy(dirs[dir_count], base);
 				dir_count++;
 			}
 		}
+		errno = 0;
 		ent = readdir(dir);
+		if(errno)
+			perror("Fail to readdir()");
 	}
 	if(R_flag) {
 		for(i =0; i < dir_count;++i) {
@@ -88,7 +107,6 @@ void ls_dir(char* path) {
 }
 
 void print_type(mode_t* m) {
-	
 	printf("%c", S_ISREG(*m) ? '-' : S_ISDIR(*m) ? 'd' : S_ISBLK(*m) ? 'b' :
 	S_ISCHR(*m) ? 'c' : S_ISFIFO(*m) ? 'p' : S_ISLNK(*m) ? 'l' : S_ISSOCK(*m) ? 's' : ' ');
 }
@@ -100,12 +118,19 @@ void print_stats(struct stat* f_st, char* name) {
 	struct tm* t;
 	long long int size = (long long int) f_st->st_size;
 	long long int links = (long long int) f_st->st_nlink;
-	size_t max = 200;
+	size_t max = 16;
 	char date[max];
+	errno = 0;
 	user = getpwuid(f_st->st_uid);
-	user = getpwuid(f_st->st_uid);
+	if(errno)
+			perror("Fail to getpwuid()");
+	errno = 0;
 	grp = getgrgid(f_st->st_gid); 
-	t = gmtime(&f_st->st_mtime);
+	if(errno)
+			perror("Fail to getgrgid()");
+	t = localtime(&f_st->st_mtime);
+	if(!t)
+		perror("Fail to localtime()");
 	strftime(date, sizeof(date), "%b %d %R", t);
 	printf("%c%c%c%c%c%c%c%c%c %lld %s %s %lld %s %s\n",
 	m & S_IRUSR ? 'r' : '-', m & S_IWUSR ? 'w' : '-',  m & S_IXUSR ? 'x' : '-',  m & S_IRGRP ? 'r' : '-',  m & S_IWGRP ? 'w' : '-',
