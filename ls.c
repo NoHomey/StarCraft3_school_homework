@@ -11,6 +11,12 @@
 #include <time.h>
 #include <errno.h>
 
+#define	S_IFMTC99 0170000
+#define	S_IFLNKC99 0120000
+#define	S_IFSOCKC99 0140000
+#define S_ISLNKC99(mode) ((mode & S_IFMTC99) == S_IFLNKC99)
+#define S_ISSOCKC99(mode) ((mode & S_IFMTC99) == S_IFSOCKC99)
+
 size_t a_flag;
 size_t R_flag;
 size_t l_flag;
@@ -46,13 +52,13 @@ int main(int argc, char** argv) {
 void ls_dir(char* path) { 
 	DIR* dir = opendir(path);
 	char* access_mes = "ls: cannot access ";
-	char* access = (char*) malloc((strlen(path) + strlen(access_mes)) * sizeof(char));
+	char* access = (char*) malloc((strlen(path) + strlen(access_mes) + 1) * sizeof(char));
 	if(!access)
 		perror("ls: fail to allocate memory");
 	strcpy(access, access_mes);
 	strcat(access, path);
 	char* forbid_mes = "ls: cannot open directory ";
-	char* forbid = (char*) malloc((strlen(path) + strlen(forbid_mes)) * sizeof(char));
+	char* forbid = (char*) malloc((strlen(path) + strlen(forbid_mes) + 1) * sizeof(char));
 	if(!forbid)
 		perror("ls: fail to allocate memory");
 	strcpy(forbid, forbid_mes);
@@ -67,8 +73,8 @@ void ls_dir(char* path) {
 		perror("ls: fail to readdir()");
 	size_t flag, i;
 	struct stat f_stat;
-	char* base = (char*) malloc(1 * sizeof(char));
-	if(!base)
+	char* relative = (char*) malloc(1 * sizeof(char));
+	if(!relative)
 		perror("ls: fail to allocate memory");
 	char* dash = "/";
 	size_t dir_curr_size = 1;
@@ -81,13 +87,13 @@ void ls_dir(char* path) {
 	while(ent) {
 		flag = ent->d_name[0] == '.' ? 1 : 0;
 		if(!flag || (flag && a_flag)) {
-			base = (char*) realloc(base, sizeof(path) + sizeof(ent->d_name));
-			if(!base)
+			relative = (char*) realloc(relative, (sizeof(path) + sizeof(ent->d_name)));
+			if(!relative)
 					perror("ls: fail to allocate memory");
-			base = strcpy(base, path);
-			base = strcat(base, dash);
-			base = strcat(base, ent->d_name);
-			if(!!lstat(base, &f_stat))
+			relative = strcpy(relative, path);
+			relative = strcat(relative, dash);
+			relative = strcat(relative, ent->d_name);
+			if(!!lstat(relative, &f_stat))
 				perror("ls: fail to stat()");
 			print_type(&f_stat.st_mode);
 			l_flag ? print_stats(&f_stat, ent->d_name) : printf(" %s\n", ent->d_name);
@@ -97,10 +103,10 @@ void ls_dir(char* path) {
 					if(!dirs)
 						perror("ls: fail to reallocate memory");
 				}
-				dirs[dir_count] = (char *) malloc((strlen(base) * sizeof(char)) + sizeof(char));
+				dirs[dir_count] = (char *) malloc((strlen(relative) + 1)  * sizeof(char));
 				if(!dirs[dir_count])
 					perror("ls: fail to allocate memory");
-				strcpy(dirs[dir_count], base);
+				strcpy(dirs[dir_count], relative);
 				dir_count++;
 			}
 		}
@@ -116,19 +122,19 @@ void ls_dir(char* path) {
 	}
 	closedir(dir);
 	free(dirs);
-	free(base);
+	free(relative);
 	free(access);
 	free(forbid);
 }
 
 void print_type(mode_t* m) {
 	printf("%c", S_ISREG(*m) ? '-' : S_ISDIR(*m) ? 'd' : S_ISBLK(*m) ? 'b' :
-	S_ISCHR(*m) ? 'c' : S_ISFIFO(*m) ? 'p' : S_ISLNK(*m) ? 'l' : S_ISSOCK(*m) ? 's' : ' ');
+	S_ISCHR(*m) ? 'c' : S_ISFIFO(*m) ? 'p' : S_ISLNKC99(*m) ? 'l' : S_ISSOCKC99(*m) ? 's' : ' ');
 }
 
 void print_stats(struct stat* f_st, char* name) {
 	mode_t m = f_st->st_mode;
-	struct passwd* user;
+	struct passwd* usr;
 	struct group* grp;
 	struct tm* t;
 	long long int size = (long long int) f_st->st_size;
@@ -136,7 +142,7 @@ void print_stats(struct stat* f_st, char* name) {
 	size_t max = 16;
 	char date[max];
 	errno = 0;
-	user = getpwuid(f_st->st_uid);
+	usr = getpwuid(f_st->st_uid);
 	if(errno)
 			perror("ls: fail to getpwuid()");
 	errno = 0;
@@ -150,7 +156,7 @@ void print_stats(struct stat* f_st, char* name) {
 	printf("%c%c%c%c%c%c%c%c%c %lld %s %s %lld %s %s\n",
 	m & S_IRUSR ? 'r' : '-', m & S_IWUSR ? 'w' : '-',  m & S_IXUSR ? 'x' : '-',  m & S_IRGRP ? 'r' : '-',  m & S_IWGRP ? 'w' : '-',
 	m & S_IXGRP ? 'x' : '-', m & S_IROTH ? 'r' : '-',  m & S_IWOTH ? 'w' : '-',  m & S_IXOTH ? 'x' : '-', links,
-	user->pw_name, grp->gr_name, size, date, name);  
+	usr->pw_name, grp->gr_name, size, date, name);  
 }
 
 void passed_dir(int argc, char** argv) {
