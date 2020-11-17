@@ -1,4 +1,4 @@
-#Game rules:
+# Game rules:
 
 Game starts with 1 *command center*, 5000 *mineral*s on the map and 5 *workers*.   
 Each *worker* mines 8 *minerals*.  
@@ -9,25 +9,25 @@ You can create new *worker* by pressing *s* but that will cost you 50 *minerals*
 You can create new *soldier* by pressing *m* but that will cost you 50 minerals.    
 You win the game when you create 20 *soldiers*.   
 
-#Run under linux:
+# How to run under Linux:
 
 Open *terminal*.    
 Cd to path where ***sc3.c*** & ***makefile*** are located or if you have cloned the repo navigate to */StarCraft3_school_homework/os/final*.    
 Run ***make***.   
 Run ***./starcraft3***.    
 
-#Play under linux:
+# How to play:
 
 Type ***m*** to create new *soldier* (You need 50 mineerals to do that).   
 Type ***s*** to create new *worker* (You need 50 mineerals to do that).   
 Type ***c*** to create new *command center* (You need 400 mineerals to do that).     
 Once you have created 20 *soldiers* press *Enter* to continiue.  
 
-#Purpose: 
+# Purpose: 
   
 Create 20 *soldiers* as fast as you can.
 
-#Important in final folders the files ***sc3.c*** were changed:
+# Important in final folders the files ***sc3.c*** were changed:
 
 > if (main_status == 16) {	//If main_status is 16 this means that is currently locked by other thread.   
 > +					i = 0;	//Reset i;    
